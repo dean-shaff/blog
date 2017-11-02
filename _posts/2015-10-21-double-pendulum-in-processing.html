@@ -1,0 +1,13 @@
+---
+layout: post
+title: Double Pendulum in Processing
+date: '2015-10-21T03:52:00.001-07:00'
+author: dshaff001
+tags: 
+modified_time: '2015-10-21T03:52:47.610-07:00'
+thumbnail: http://4.bp.blogspot.com/-_QrhQsTP-Ak/ViduVGdl33I/AAAAAAAAFYE/pDWNsfLtvlA/s72-c/double_pendulum_processing.gif
+blogger_id: tag:blogger.com,1999:blog-8551793629529973046.post-1089455789522276757
+blogger_orig_url: http://deanshaff.blogspot.com/2015/10/double-pendulum-in-processing.html
+---
+
+<div dir="ltr" style="text-align: left;" trbidi="on">I'm taking a class called Introduction to Interactive Media this semester. The second half of the semester concentrates mostly on making cool stuff in <a href="https://processing.org/">Processing</a>. As much as I like Python, it has a few shortcomings. Making animations is one. I thought it would be cool to take some of code I used for solving differential equations (in Python) and plug it into Processing to see what happens. My first experiment involves animating the double pendulum. From this animation, I think it's pretty clear that I messed up the math somewhere, as it has some rather weird behavior. Check it out:<br /><br /><div class="separator" style="clear: both; text-align: center;"><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-_QrhQsTP-Ak/ViduVGdl33I/AAAAAAAAFYE/pDWNsfLtvlA/s1600/double_pendulum_processing.gif" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="288" src="http://4.bp.blogspot.com/-_QrhQsTP-Ak/ViduVGdl33I/AAAAAAAAFYE/pDWNsfLtvlA/s320/double_pendulum_processing.gif" width="320" /></a></div><br /><br />I'll have to re solve the equations of motion of this system to be sure that I have it right. Otherwise, I think part of the issue might be the method I'm using to solve the system of differential equations. I haven't (yet) incorporated a linear algebra package into my Processing code, so I'm stuck using forward Euler method. Alternatively, I think I could use another explicit method that allows for better stability, like Runge-Kutta. Another thing I'd like to do is to make the speed at which the animation plays independent of the step sized used in my solver.<br /><br />I see Processing as a really cool tool for Physics visualizations. Stay tuned; I plan on doing a few more of these simple animations over my Fall break.&nbsp;</div>
