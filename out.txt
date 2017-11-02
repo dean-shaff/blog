@@ -1,0 +1,6 @@
+Configuration file: /home/dean/blog/_config.yml
+            Source: /home/dean/blog
+       Destination: /home/dean/blog/_site
+ Incremental build: disabled. Enable with --incremental
+      Generating... 
+bundler: failed to load command: jekyll (/usr/local/bin/jekyll)
