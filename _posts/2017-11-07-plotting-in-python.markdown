@@ -14,7 +14,7 @@ The purpose of this post is simple: Show how to create a basic plot with
 errorbars, after installing Python and matplotlib (with all its associated
 dependencies). Hopefully, you'll be able to produce the following plot:
 
-![Noisy Plot]({{ "assets/noisy_data.png" | absolute_url }})
+![Noisy Plot]({{ "assets/noisy_data.png" | relative_url }})
 
 ### Intro to the command line
 
@@ -194,8 +194,8 @@ if __name__ == "__main__":
 In order to run this code on your own computer, you can do the following:
 - With some text raw text editor (_not_ a word processor like Microsoft Word),
 copy and paste the above code into a file called "make_plot.py". Alternatively,
-download [the code]({{ "assets/code/plotting-in-python/make_plot.py" | absolute_url }})
-- Download [this csv file]({{ "assets/code/plotting-in-python/sample_data.csv" | absolute_url }})
+download [the code]({{ "assets/code/plotting-in-python/make_plot.py" | relative_url }})
+- Download [this csv file]({{ "assets/code/plotting-in-python/sample_data.csv" | relative_url }})
 and save in the same folder as the python file.  
 - In the command line, navigate to the folder where you saved the csv and python files.
 Say, for example, you saved it in your "Downloads" folder. Navigate to your
