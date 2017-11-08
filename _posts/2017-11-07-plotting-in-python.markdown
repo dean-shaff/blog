@@ -14,7 +14,56 @@ The purpose of this post is simple: Show how to create a basic plot with
 errorbars, after installing Python and matplotlib (with all its associated
 dependencies). Hopefully, you'll be able to produce the following plot:
 
-![Noisy Plot]({{ "assets/noisy_data.png" | relative_url }})
+![Noisy Plot]({{ "assets/code/plotting-in-python/sample_data_plot.png" | relative_url }})
+
+Before jumping into the nitty-gritty of plotting, let's talk a little about the
+data. I've generated this data using a Python script, but it could correspond
+to something real. For example, imagine we've just bought some amplifier, and
+we want to test how it responds to changes in input power ($\propto$ input
+Voltage) at constant gain. An amplifier is an electrical component that boosts
+(or amplifies) some incoming signal. A good amplifier is one that does so
+without degrading the original signal. We can see that as input power increases,
+so does output power. Moreover, the increase in output power looks linear. Either
+we have bought a really nice amplifier, or we haven't found the region for which
+amplification starts to peter off.
+
+What do the dots and errorbars mean in the context of our example? The dots
+are displaying the mean of measurements at each input power, and the errorbars
+are displaying standard error of measurements. Everytime we make a measurement,
+we record the output power of our new amplifier. Let's take a look at the
+[CSV file]({{ "assets/code/plotting-in-python/sample_data.csv" | relative_url }})
+associated with this data:
+
+| **Input power** | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
+| **Output power, sample 1** | 3.941 | 5.306 | 19.40 | 17.53 | 26.32 | 36.31 | 19.58 | 25.97 |
+| **Output power, sample 2** | 22.46 | 12.52 | 21.30 | 19.57 | 20.97 | 19.48 | 32.33 | 45.51 |
+| **Output power, sample 3** | 18.89 | 14.83 | 22.1 | 23.67 | 16.14 | 21.12 | 37.12 | 30.81 |
+| **Output power, sample 4** | 13.19 | 24.73 | 12.55 | 9.209 | 28.1 | 23.08 | 35.54 | 27.39 |
+| **Output power, sample 5** | 15.88 | 8.28 | 15.06 | 27.71 | 14.55 | 26.84 | 44.88 | 41.13 |
+
+<br>
+
+I've _truncated_ (as opposed to rounded) each value to make it easier to read.
+The first row of the table is the input power to out amplifier. Each column
+corresponds to various measurements of output power for a given input.
+To calculate the position of first dot in the plot, we can calculate the mean of
+the measured data in the first column. The size of the errorbar is simply the
+standard error of the measurement, calculated as follows:
+
+$$
+SE = \frac{\sigma}{\sqrt n}
+$$
+
+Here, $\sigma$ is the standard deviation, calculated as follows:
+
+$$
+\sigma = \sqrt{\sum^{N-1}_{i=0} \frac{(x_i - \bar{x})^2}{N-1}}
+$$
+
+where ${\bar{x}}$ is the mean of the measurements, $N$ is the number of
+measurements. I've 0-indexed the sum because that's how Python indexes arrays.
+With some understanding about what this data means lets look into how to
+display it.
 
 ### Intro to the command line
 
@@ -218,7 +267,8 @@ lines near the end of the program:
 ```python
 x, data = load_data(f_name)
 fig, ax = plt.subplots()
-ax.errorbar(x,np.mean(data, axis=1),yerr=np.std(data,axis=1),
+std_err = np.std(data,axis=1)/np.sqrt(data.shape[1])
+ax.errorbar(x,np.mean(data, axis=1),yerr=std_err,
             fmt='o',capsize=3, elinewidth=1, color='green',
             label="Some description of data")
 ```
@@ -228,7 +278,8 @@ We could, in fact, cut this down to the following:
 ```python
 x, data = load_data(f_name)
 fig, ax = plt.subplots()
-ax.errorbar(x,np.mean(data, axis=1),yerr=np.std(data,axis=1))
+std_err = np.std(data,axis=1)/np.sqrt(data.shape[1])
+ax.errorbar(x,np.mean(data, axis=1),yerr=std_err)
 plt.show()
 ```
 

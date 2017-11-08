@@ -28,15 +28,16 @@ def create_data(f_name=None, plot=False):
             return m*x + b
         return fn
 
-    linear = linear_fn(3., 2.)
+    linear = linear_fn(3., 0.)
 
-    x = np.arange(0,10,1)
+    x = np.arange(4,12,1)
     y = linear(x) + 6*np.random.randn(5,x.shape[0])
     if f_name is not None:
         with open(f_name, "w") as f:
             writer = csv.writer(f,delimiter=",")
-            for i in range(y.shape[1]):
-                writer.writerow(y[:,i])
+            writer.writerow(x)
+            for i in range(y.shape[0]):
+                writer.writerow(y[i,:])
 
     if plot:
         fig, ax = plt.subplots()

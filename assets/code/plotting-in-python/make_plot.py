@@ -21,7 +21,8 @@ def load_data_from_csv(f_name):
         data.append([float(i) for i in row])
     f.close()
     data = np.array(data)
-    x = np.arange(data.shape[0])
+    x = data[0,:]
+    data = data[1:,:].swapaxes(0,1)
     return x, data
 
 def plot_data(f_name):
@@ -40,7 +41,8 @@ def plot_data(f_name):
     # ax.errorbar is the main plotting function call.
     # The `fmt`, `capsize`, `elinewidth`, `color` and `label` keyword
     # arguments are there to style the plot -- they are not instrumental.
-    ax.errorbar(x,np.mean(data, axis=1),yerr=np.std(data,axis=1),
+    std_err = np.std(data,axis=1)/np.sqrt(data.shape[1])
+    ax.errorbar(x,np.mean(data, axis=1),yerr=std_err,
                 fmt='o',capsize=3, elinewidth=1, color='green',
                 label="Some description of data")
     # Set the text on the x axis.
@@ -56,8 +58,8 @@ def plot_data(f_name):
     # Create a window with the plot. You can click the save icon to
     # save it to file. Alternatively, you can uncomment the
     # `fig.savefig("sample_data_plot.png")` line to save directly.
-    plt.show()
-    # fig.savefig("sample_data_plot.png")
+    # plt.show()
+    fig.savefig("sample_data_plot.png")
 
 if __name__ == "__main__":
     plot_data("./sample_data.csv")
