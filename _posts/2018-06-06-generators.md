@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Python generators and coroutines"
-date:   2018-06-06 14:14:00 +0400
+date:   2018-06-12 12:04:00 +0400
 categories: python
 ---
 
@@ -275,7 +275,10 @@ if __name__ == "__main__":
 ```
 
 Here, we can reproduce similar behavior to the generator based approach,
-albeit with much more complexity.
+albeit with much more complexity, and less capacity for controlling when our
+program exits. Generators allow us to switch between tasks when we want,
+effectively allowing us to do multiple things at once, _without using threads_.
+The `yield` statement gives us the power to do our own context switching,
 
 Generators allow for elegant, fine-tuned control over program execution. As
 generators return program control back to the calling context anytime it hits
@@ -283,6 +286,3 @@ a yield statement, we only worry about control flow in the calling context. If
 we want to get this same level of control with functions, we have to pass
 control flow tools to those functions, as they only return once. This makes code
 inherently opinionated and harder to develop, test and debug.
-
-Another advantage to using generators is that they allow for controlling
-program execution without using threads. 
