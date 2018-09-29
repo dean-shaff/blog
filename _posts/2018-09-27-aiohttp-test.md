@@ -254,17 +254,16 @@ sys     0m0.252s
 ```
 me@local:~$ time python async_basketball.py
 ...
-real    1m3.258s
-user    0m1.514s
-sys     0m0.277s
+real    0m41.645s
+user    0m2.011s
+sys     0m0.308s
 ```
 
 I had to make a few changes to the original code in order to make it run. I had
 to make some changes to the headers sent to the site, and I had to use HTTPS
 instead of HTTP. For the async code, I also had to write some code that limits
-the number of requests made in a given amount of time. I suspect (but I'm not sure) that this is an
-artifact of the NBA website. It turns out that you can really only make about
-2 requests per second. With this in mind, the results for the two scrapers
+the number of requests made at any one time. I suspect (but I'm not sure) that this is an
+artifact of the NBA website. With this in mind, the results for the two scrapers
 are about the same. I imagine that the async code _could_ go much faster, but
 we're limited in terms of the number of concurrent requests we can make in a
 given period of time. Looking at the time time stamp on the terriblecode blog post,
@@ -272,4 +271,4 @@ I see that the post was put up about a year and a half ago. A year and a half
 is plenty of time for the NBA statistics website to have new security/anti-scraping
 measures put in place. On the other hand, I'm always willing to accept that
 there is something wrong with my code. Shoot me an email if you see something
-wrong. 
+wrong.
