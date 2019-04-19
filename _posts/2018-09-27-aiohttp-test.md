@@ -96,7 +96,7 @@ fact that `aiohttp` is dealing in awaitables, and `requests` isn't. For instance
 `requests` can reasonably have a `Response.text` property, while `aiohttp`'s
 comparable `Response` object should reasonably return an awaitable (aka coroutine)
 when `text` is called. It seems to me that a property that returns an awaitable
-is not really Pythonic, and simply not possible (see (here)[https://stackoverflow.com/questions/36666151/asynchronous-property-setter]).
+is not really Pythonic, and simply not possible (see [here](https://stackoverflow.com/questions/36666151/asynchronous-property-setter)).
 
 The synchronous version is much less _adorned_, but we can get a pretty good
 idea what's happening without necessarily understanding whats going on
