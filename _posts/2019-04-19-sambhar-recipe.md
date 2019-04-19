@@ -9,10 +9,10 @@ categories: recipe
 
 For a description of this South Indian stew, go to the end of the post.
 
-1 cup = 16 Tbsp
-3 tsp = 1 Tbsp
-
 For the sambhar powder:
+
+Generally, I like recipes in terms of masses instead of volumes, so I might
+update this recipe with spice masses as well.
 
 - 25 dry red chillies. I use kashmiri chillies, because they're not as hot
 as regular red chillies. If you use only regular red chillies, this is going
@@ -29,10 +29,13 @@ kind with which you make dal makhani.
 - 1 Tbsp rice
 - 2 tsp asafoetida. In the past, whenever recipes have listed this, I've always
 sort of ignored it. In reality, it actually imparts a depth of flavour that is
-otherwise hard to achieve. In the supermarket,
-- 1 Tbsp tumeric powder
+otherwise hard to achieve. In the supermarket, asafoetida usually comes in a
+small plastic container somwhere between a salt shaker and a bottle of medicine.
+Be careful with this stuff -- it can quickly overpower your food, rendering it
+so voluminous and strong so as to be almost inedible.
+- 1 Tbsp turmeric powder
 - 3 Tbsp dried curry leaves. Much like asafoetida, I've always ignored curry
-leaves when they come up in recipes. Much like
+leaves when they come up in recipes.
 - 1 Tbsp dried coconut.
 
 In a pan, dry roast everything except for the powder ingredients and curry leaves over medium
@@ -46,7 +49,7 @@ mix. If things start to get blackened or smell burned, throw everything out and 
 Place the roasted spices and curry leaves in a spice grinder, blending into a
 fine powder. At this point, the powder should start to smell like sambhar.
 For me, I'm thrust back into a brightly lit, tiny cafe in Abu Dhabi, where
-sambhar is served up with spongey, slightly sour idlis and a healthy scoop of
+sambhar is served up with spongy, slightly sour idlis and a healthy scoop of
 coconut chutney. Put the powder in a storage container, adding the remaining
 powdered spices. Mix thoroughly.
 
@@ -68,14 +71,14 @@ sambhar might end up tasting eternally bland.
 - 1 Tbsp vegetable oil
 - Vegetables. I've eaten sambhar with a number of different vegetables, ranging
 from the simplest with just drumstick and pearl onions, to elaborate ones with
-potatoes, pumpkin, gaajar, bhindi, eggplant, drumstick, tomatoes, and onions.
+potatoes, pumpkin, carrot, bhindi, eggplant, drumstick, tomatoes, and onions.
 You can sort of pick and choose what veggies you like best. For me, I usually
 put the following:
-  - carrots
-  - drumstick
-  - bhindi aka okra
-  - pumpkin aka squash
-I like the idea of using ingredients that are available in your current
+- carrot aka gaajar
+- drumstick aka sahajan (सहजन)
+- okra aka bhindi
+- pumpkin aka squash
+I like the idea of using ingredients that are available in my current
 location. It can be a little tricky to find okra where I am, so I might
 use green beans instead.
 
@@ -109,3 +112,9 @@ A debate appears to exist in the sambhar world as to whether or not the stew
 should be a little sweet. Purists are of the opinion that it should be entirely
 savoury. I think a little sweetness contrasts nicely with the heat of the
 chillies and the tanginess of the tamarind.
+
+### Quick conversions
+
+1 cup = 16 Tbsp
+
+3 tsp = 1 Tbsp
