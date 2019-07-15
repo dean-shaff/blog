@@ -63,3 +63,25 @@ And after:
 Here I am standing next to the dish, so you can get a sense of how large it is:
 
 ![me-and-dish]({{ "assets/me-and-dish.jpg" | relative_url }})
+
+### 15/07/2019
+
+After a two month hiatus, I'm back working on the telescope. I found a cool
+maker space up in Brunswick where I think I'll be able to manufacture the parts
+I need to make a steerable base.
+
+Some of the folks here at Maker Community suggested that I start by making
+a small prototype of the base before making the full size version. With lots of
+help, I was able to print out the basic structure of the base. I used this
+online 3D modelling tool called Tinkercad to make the the shapes for the base.
+
+Here's the parts printing:
+
+![parts-printing]({{ "assets/parts-printing.jpg" | relative_url }})
+
+Here's the finished parts, set up similar to the configuration I imagine:
+
+![configured-parts]({{ "assets/configured-parts.jpg" | relative_url }})
+
+Moving forward, I'm hoping to demo some stepper motors in addition to gluing
+my prototype base together.
