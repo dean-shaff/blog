@@ -219,13 +219,13 @@ This is pretty cool. PyCUDA no doubt has a C++ API that we could use to access t
 Let's compile the interface file, located in the `python` subdirectory.
 
 ```
-swig -python -outdir ./ -c++ -Iinclude -Ipython -I/python/include/path/here -o example_wrap.cxx python/example.i
+swig -python -outdir ./ -c++ -Iinclude -I/python/include/path/here -o example_wrap.cxx python/example.i
 ```
 
 This creates two files: `example_wrap.cxx` and `example.py`. `example.py` is expecting the presence of a shared library called `_example.so`. We can create this as follows:
 
 ```
-g++ -fPIC -shared -o example_wrap.o -c -Iinclude -Ipython -I/python/include/path/here example_wrap.cxx
+g++ -fPIC -shared -o example_wrap.o -c -Iinclude -I/python/include/path/here example_wrap.cxx
 nvcc --compiler-options -fPIC -shared -o sum.o -c -Iinclude src/sum.cu
 g++ -fPIC -shared -o _example.so example_wrap.o sum.o /path/to/python/shared/lib/here -l cudart
 ```
@@ -238,5 +238,7 @@ cmake ..
 make
 python ./../python/test_example.py
 ```
+
+I've also put together a simple Makefile that illustrates in a more obvious way the series of steps needed to build the Python bindings.
 
 `python/example.py` runs a small suite of unittests to ensure that the `sum` function runs.
