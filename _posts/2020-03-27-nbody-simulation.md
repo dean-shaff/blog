@@ -79,4 +79,4 @@ $$
 
 Knowing that this method, like the forward Euler method, is not ideal for oscillatory systems like that of the N-body problem, I've set up the CPU bound version of my code such that we can plug'n'play different solvers. I might decide to implement a Leapfrog solver down the line, as these are better suited to the type of second order differential equation we're dealing with.
 
-[^1]: Solving the system of differential equations associated with the N-body problem is an $O(n^2)$ problem. Most N-body codes used in astrophysics use some approximation technique that reduces the complexity to $O(nlog(n))$. Even a blazing fast CUDA implementation
+[^1]: Solving the system of differential equations associated with the N-body problem is an $O(n^2)$ problem. Most N-body codes used in astrophysics use some approximation technique that reduces the complexity to $O(nlog(n))$ or better. Even a blazing fast CUDA implementation won't be able to contend with $O(nlog(n))$.
