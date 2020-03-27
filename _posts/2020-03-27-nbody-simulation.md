@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Let's make a N-body simulator!"
+title:  "Let's make an N-body simulator!"
 date:   2020-03-27 18:26:00 +0530
 categories: N-body, C++, CUDA
 ---
