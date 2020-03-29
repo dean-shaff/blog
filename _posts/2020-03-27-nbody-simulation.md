@@ -12,7 +12,7 @@ I'm going to be walking through my efforts to make a fast N-body simulator. Here
 - Figure out how to nicely integrate CMake, CUDA, SWIG, and Python. CMake is a good choice for configuring C++/CUDA projects. It makes integrating external libraries somewhat less painful than using `make` on its own, and it allows for cross-platform builds. Unfortunately, I have yet to see a good example of how integrate CMake and the Python distribution tools. Most people seem to maintain a CMake configuration for building on the C++ side, and then a separate `setup.py` file for building Python extensions. The issue with this approach is that both Python's `setuptools` and CMake end up being used to resolve dependencies. I would prefer to use a single tool for build configuration and dependency resolution if possible.
   - Bonus if I can figure out how to get things to play nice with `poetry`.
 
-The code (still very much a work in progress) can be found [here](https://gitlab.com/dean-shaff/n-body).
+The code (still very much a work in progress) can be found [here](https://gitlab.com/dean-shaff/n-body). This is definitely not my first look at the N-Body problem. Back in 2015, I put together an N-body simulator in P5.js, which you can see [here](https://dean-shaff.github.io/NBody/NBody.html).
 
 ### The Equations
 
@@ -42,6 +42,33 @@ $$
 $$
 
 Nice! For each time step, we need to compute the elements of our matrix $\mathbf{M}_{ij}$, and then perform a matrix-vector multiplication to get our acceleration.
+
+### Dimensionless Equations
+
+The equations from above have the quantity $G$ in them. $G$ is a pretty small number: $G = 6.67408 × 10^{-11} \frac{m^3}{kg^1 s^2}$. Now, $G$ is not so small that we're going to be pushing up against the precision limits of single or double precision numbers, but it would be nice if we could operate in a more numerically comfortable space. Moreover, it would be nice if we didn't have to multiply our equations by any additional scale factor. How could we re-scale our position, velocity, and acceleration vectors to effectively set $G=1$?
+
+Following [this presentation](https://gandalfcode.github.io/gandalf-school/Units.pdf), we can judiciously choose proxy variables, $q_{\circ}$, $v_{\circ}$, $a_{\circ}$, $m_{\circ}$ and $t_{\circ}$ and substitute them into our original equation. If we choose
+
+$$
+\vec{q_{\circ}} = \frac{\vec{q}}{R_{\circ}}\\
+\vec{t_{\circ}} = \frac{\vec{t}}{T_{\circ}}\\
+\vec{m_{\circ}} = \frac{\vec{m}}{M_{\circ}}
+$$
+
+then our velocity and acceleration proxy vectors must have the following form in order for the units to work out correctly:
+
+$$
+\vec{v_{\circ}} = \vec{v} \frac{T_{\circ}}{R_{\circ}}\\
+\vec{a_{\circ}} = \vec{a} \frac{T_{\circ}^2}{R_{\circ}}
+$$
+
+If we subsitute these values into our original equation for the acceleration of each particle:
+
+$$
+\vec{a_{\circ i}} = \frac{GM_{\circ}T_{\circ}^{2}}{R_{\circ}^{3}} \sum^{n}_{j=1\\j\ne i} \frac{m_{\circ j}(\vec{q_{\circ j}} - \vec{q_{ \circ i}})}{||\vec{q_{ \circ j}} - \vec{q_{ \circ i}}||^3}
+$$
+
+Now we can set $\frac{GM_{\circ}T_{\circ}^{2}}{R_{\circ}^{3}}=1$, acheiving our original goal of "effectively setting $G=1$".
 
 ### Solving Differential Equations Numerically
 
@@ -78,5 +105,6 @@ k_4 = h f(t_n + h, y_n + k_3)
 $$
 
 Knowing that this method, like the forward Euler method, is not ideal for oscillatory systems like that of the N-body problem, I've set up the CPU bound version of my code such that we can plug'n'play different solvers. I might decide to implement a Leapfrog solver down the line, as these are better suited to the type of second order differential equation we're dealing with.
+
 
 [^1]: Solving the system of differential equations associated with the N-body problem is an $O(n^2)$ problem. Most N-body codes used in astrophysics use some approximation technique that reduces the complexity to $O(nlog(n))$ or better. Even a blazing fast CUDA implementation won't be able to contend with $O(nlog(n))$.
