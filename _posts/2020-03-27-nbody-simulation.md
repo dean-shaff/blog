@@ -2,7 +2,7 @@
 layout: post
 title:  "Let's make an N-body simulator!"
 date:   2020-03-27 18:26:00 +0530
-categories: N-body, C++, CUDA
+categories: N-body, C++, CUDA, OpenCL
 ---
 
 I'm going to be walking through my efforts to make a fast N-body simulator. Here, we're going to be directly solving the N-body differential equations. As such, this code is not intended to be used for the purposes of heavy duty simulations[^1]. With this in mind, here are some of my goals for this project:
