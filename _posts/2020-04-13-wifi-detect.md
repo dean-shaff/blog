@@ -42,23 +42,82 @@ On to the `wifi-detect` program itself. This program does the following:
 The trickiest part of all this was not writing the code, rather it was finding decent resources. For example, when working on the command line, I use the `mount` command to list devices and their respective mount points. Doing the equivalent in C is not particularly difficult, but I found it quite tricky to track down which headers to include, and which functions to call. The following function populates a `std::map<std::string, std::string>` object with devices and their corresponding mount points:
 
 ```c++
-  #include <string>
-  #include <map>
-  #include <mntent.h>
 
-  void get_mnt_tbl (std::map<std::string, std::string>& tbl)
-  {
-    struct mntent *ent;
-    FILE *aFile;
+#include <string>
+#include <map>
+#include <mntent.h>
 
-    aFile = setmntent("/etc/mtab", "r");
-    if (aFile == NULL) {
-      perror("setmntent");
-      exit(1);
-    }
-    while (NULL != (ent = getmntent(aFile))) {
-      tbl[ent->mnt_fsname] = ent->mnt_dir;
-    }
-    endmntent(aFile);
+void get_mnt_tbl (std::map<std::string, std::string>& tbl)
+{
+  struct mntent \*ent;
+  FILE \*aFile;
+
+  aFile = setmntent("/etc/mtab", "r");
+  if (aFile == NULL) {
+    perror("setmntent");
+    exit(1);
   }
+  while (NULL != (ent = getmntent(aFile))) {
+    tbl[ent->mnt_fsname] = ent->mnt_dir;
+  }
+  endmntent(aFile);
+}
+
 ```
+
+I'm not sure how portable this function is; notice the hard coded path to "/etc/mtab", which may not necessarily point to the mount table on all platforms.
+
+Figuring out the code to get the partitions for each device turned out to be a little tricky as well. This requires linking against `libblkid`, which (I believe) is the same library that the `lsblk` command uses. The following snippet populates a `std::vector` of `std::tuple` objects with the path to the partition, the partition label, and the drive type (this is adapted from some code I found on Stack Overflow). It needs to be run as root:
+
+```c++
+#include <vector>
+#include <tuple>
+#include <string>
+
+#include <blkid/blkid.h>
+
+
+void get_partitions (const std::string& dev, std::vector<std::tuple<std::string, std::string, std::string>>& partitions)
+{
+  blkid_probe pr = blkid_new_probe_from_filename(dev.c_str());
+  if (!pr) {
+    std::stringstream iss;
+    iss << "Failed to open " << dev << " (maybe trying running as root)";
+    throw std::runtime_error(iss.str());
+    return;
+  }
+  // Get number of partitions
+  blkid_partlist ls;
+  int nparts;
+
+  ls = blkid_probe_get_partitions(pr);
+  nparts = blkid_partlist_numof_partitions(ls);
+  partitions.resize(nparts);
+
+  if (nparts <= 0){
+    throw std::runtime_error("Please enter correct device name! e.g. \"/dev/sdc\"");
+    return;
+  }
+
+  // Get UUID, label and type
+  const char \*label;
+  const char \*type;
+
+  for (int idx = 0; idx < nparts; idx++) {
+
+    std::get<0>(partitions[idx]) = dev + std::to_string(idx + 1);
+    pr = blkid_new_probe_from_filename(std::get<0>(partitions[idx]).c_str());
+    blkid_do_probe(pr);
+    blkid_probe_lookup_value(pr, "LABEL", &label, NULL);
+    std::get<1>(partitions[idx]) = label;
+
+    blkid_probe_lookup_value(pr, "TYPE", &type, NULL);
+    std::get<2>(partitions[idx]) = type;
+
+  }
+
+  blkid_free_probe(pr);
+}
+```
+
+All in all, this ended up being a useful little project. By writing my utility in C++, I got to explore the way C interfaces with Linux system calls. I found this to be a little anticlimatic. Ages ago, when Zed Shaw's "Learn C the Hard Way" was still free online, I remember him going on this lovely rant about the power of C to break your computer, your heart, your federal safety net programs. At the time, I was just starting to learn Python, so I was spooked, and more than a little impressed. Now that I spend time dinking around with C++ (and occasionally C), I find that I'm not as impressed by these statements. Maybe I'm not going low level enough. Maybe I'm being naive. 
