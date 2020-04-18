@@ -159,19 +159,19 @@ void SingleThreadEngine::velocity_updates (
   std::vector<double>& updates
 )
 {
-  const unsigned n_masses = masses.size()
-
   std::vector<double> acceleration(3);
 
   unsigned idx3;
   unsigned idy3;
 
-  for (unsigned idx=0; idx<n_masses; idx++) {
+  double divisor;
+
+  for (unsigned idx=0; idx<this->n_masses; idx++) {
     acceleration[0] = 0.0;
     acceleration[1] = 0.0;
     acceleration[2] = 0.0;
     idx3 = 3*idx;
-    for (unsigned idy=0; idy<n_masses; idy++) {
+    for (unsigned idy=0; idy<this->n_masses; idy++) {
       if (idx == idy) {
         continue;
       }
@@ -182,7 +182,7 @@ void SingleThreadEngine::velocity_updates (
           std::pow(positions[idy3 + 2] - positions[idx3 + 2], 2), 1.5);
 
       for (unsigned idz=0; idz<3; idz++) {
-        acceleration[idz] += (masses[idy] * (positions[idy3 + idz] - positions[idx3 + idz]) / divisor);
+        acceleration[idz] += (this->masses[idy] * (positions[idy3 + idz] - positions[idx3 + idz]) / divisor);
       }
     }
     for (unsigned idz=0; idz<3; idz++) {
