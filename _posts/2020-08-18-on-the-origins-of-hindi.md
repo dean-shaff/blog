@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "On the Origins of Hindi"
-date: 2020-08-18 16:10:59 -0500
+date: 2020-08-26 15:01:00 -0500
 categories: hindi, urdu, linguistics
 ---
 
