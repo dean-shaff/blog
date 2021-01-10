@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Configuring SSL on single instance AWS EB"
-date: 2020-01-10 09:11:27 -0600
+date: 2021-01-10 09:11:27 -0600
 categories: aws, ssl, python, planet-tracker
 ---
 
@@ -18,7 +18,7 @@ Given the prevalence of AWS products in the wild, I decided to try out redeployi
 
 With the AWS CLI client installed, getting my app set up with EB wasn’t super difficult. After getting things set up in EB, I purchased and registerd a domain with Route 53, and connected it to my EB environment. After about an hour of messing aroud, my app was running on my new domain. My app loaded wicked fast, sometimes two or three times faster than the Heroku version.
 
-After the app was up for a month, I got a surprise in the form of a ~$25 bill from AWS. It turns out that the default EB environment uses a load balancer, which charges at minimum about $20 per month. Alarmed, I started looking for a cheaper solution. It turns out that you can shut down the load balancer, but then you lose SSL, meaning that your app won’t run over HTTPS.
+After the app was up for a month, I got a surprise in the form of a $25 bill from AWS. It turns out that the default EB environment uses a load balancer, which charges at minimum about $20 per month. Alarmed, I started looking for a cheaper solution. It turns out that you can shut down the load balancer, but then you lose SSL, meaning that your app won’t run over HTTPS.
 
 Searching around online, I realized I had to rebuild my app as a single instance EB environment. This means that it would only run on one EC2 instance, instead of potentially splitting the load between multiple servers. This also meant that I would have to configure SSL on my own.
 
