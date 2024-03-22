@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Building our own async event loop in Python Part 1"
-date: 2024-03-22 08:46:00 -0600
+title:  "Building our own Async Event Loop in Python: Part 1"
+date: 2024-03-21 08:46:00 -0600
 categories: python
 ---
 
@@ -82,7 +82,7 @@ Here's where the mystery begins. `asyncio.sleep` has the same name as `time.slee
 
 But `asyncio.sleep`? When coupled with `asyncio.gather` or `asyncio.create_task` (the mechanism for running background tasks in `asyncio`) it behaves _very_ differently. It's almost like we're running two `time.sleep` calls in separate threads, but in reality we're running everything on a single thread. How does this work? How do we make it look like we're doing multiple things at once while being limited to doing one thing at a time? 
 
-### Part 1: Writing our own version of `asyncio.sleep`
+### Writing our own version of `asyncio.sleep`
 
 Let's see if we can write our own version of `asyncio.sleep` to get a better understanding of what's going on under the hood.
 
@@ -239,7 +239,7 @@ What's happening here? We create a task list/queue (`tasks`) consisting of two `
 
 At this point you might be thinking that there's something fishy going on here. This can't be a very efficient script because of those `while` loops in our sleep function. In particular, we're not doing any work between subsequent interations in the `while` loop, which means we're effectively spinning our wheels. If you were to run `top` while this script runs, you would see CPU usage shoot up to 100%. Equivalent `asyncio` code doesn't do this. To understand why this is the case, we have to take a look at the source code for `asyncio.sleep`. 
 
-### Part 2: an `asyncio.sleep` deep dive
+### An `asyncio.sleep` deep dive
 
 Let's take a look at how `asyncio.sleep` actually works. In particular, let's see if we can answer the following questions:
 - how does it work concurrently?
@@ -545,6 +545,8 @@ I think we're well positioned now to answer the questions I posed at the start o
 ### Wrapping up
 
 In this post we implemented our own version of `asyncio.sleep`, and took a look at how `asyncio.sleep` works under the hood. In the next post, we'll tackle concurrent networking with `select`. I'll also introduce `dio` (Dean I/O), a simple ~200 LOC Python event loop that allows for concurrently making basic TCP requests, running background tasks, and sleeping.
+
+---
 
 
 [^msgspec]: If you've ever taken a look at all 22.000+ lines of code in the [`msgspec` codebase](https://github.com/jcrist/msgspec/blob/main/msgspec/_core.c) you know that describing this as a "bunch of metaprogramming using the Python C-API" is a dramatic oversimplification of what's going on here. The point is, however, that I can _reason_ about this library.
