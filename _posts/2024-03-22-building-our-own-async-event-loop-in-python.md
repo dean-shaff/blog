@@ -5,7 +5,7 @@ date: 2024-03-21 08:46:00 -0600
 categories: python
 ---
 
-For part two of this series, click [here]({% post_url 2024-03-23-building-our-own-async-event-loop-in-python %})
+For part two of this series, click [here]({% post_url 2024-03-23-building-our-own-async-event-loop-in-python-part-2 %})
 
 If you're reading this article, I'm assuming you have some background in Python, and I'm assuming that you've been a user of async libraries in Python. If you've ever written `async def` or `await ...` then you should have enough background to understand what's going on in this article. 
 
@@ -546,7 +546,7 @@ I think we're well positioned now to answer the questions I posed at the start o
 
 ### Wrapping up
 
-In this post we implemented our own version of `asyncio.sleep`, and took a look at how `asyncio.sleep` works under the hood. In the next post, we'll tackle concurrent networking with `select`. I'll also introduce `dio` (Dean I/O), a simple ~200 LOC Python event loop that allows for concurrently making basic TCP requests, running background tasks, and sleeping.
+In this post we implemented our own version of `asyncio.sleep`, and took a look at how `asyncio.sleep` works under the hood. In the [next post]({% post_url 2024-03-23-building-our-own-async-event-loop-in-python-part-2 %}), we'll tackle concurrent networking with `select`. I'll also introduce `dio` (Dean I/O), a simple ~200 LOC Python event loop that allows for concurrently making basic TCP requests, running background tasks, and sleeping.
 
 ---
 

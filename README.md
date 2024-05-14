@@ -16,6 +16,21 @@ Then we want to set up `gem` such that it doesn't try to install globally:
 echo export GEM_HOME="$HOME/.gem" >> ~/.bash_aliases
 ```
 
+Or, use rbenv:
+
+```
+brew install rbenv
+```
+
+Then add `eval "$(rbenv init - zsh)"` to your `~/.zshrc`. 
+
+Install the latest version of ruby: 
+
+```
+rbenv install 3.3.1
+rbenv local 3.3.1
+```
+
 Now let's install bundler:
 
 ```
