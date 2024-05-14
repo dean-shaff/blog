@@ -5,9 +5,20 @@ date: 2024-01-15 07:11:27 -0600
 categories: personal
 ---
 
-Hindi/Urdu as a common second (or third) language.
 
-I recently traveled back to the UAE for a friend's wedding. This is the first time I'd been back in over five years, and also the first time that I'd been back since starting to speak some Hindi/Urdu. Part of my initial motivation for learning Urdu 
+When I first moved to Abu Dhabi in 2012, I was fascinated by how immensely cosmopolitan the city was. Abu Dhabi is cosmopolitan in a way that's hard to understand unless you've lived somewhere like Brooklyn. I live in 
+
+
+
+I got back from a trip to the UAE last Thursday. I was there to see my friend get married, and it was a lovely wedding. We danced until we were dripping with sweat and then kept dancing. We danced harder than I've danced in years. It reminded me of all the partying that Kim Stanley Robinson talks about in his Mars Trilogy (I just finished those books a day or so ago so its very fresh in my mind). 
+
+My friend planned some wedding activities before the ceremony itself, but we had a lot of downtime to explore Dubai. 
+
+I haven't been back to the UAE in over five years, so I was really excited at the chance to wander around old Dubai and downtown Abu Dhabi with my best friend from university.
+
+Being back in Deira reminded me of one the reasons why I wanted to learn Urdu in the first place. 
+
+I had the chance to 
 
 - I learned Urdu in the first place because I wanted to be able to talk to people in the UAE. Depending on where you go in Dubai and Abu Dhabi, Urdu is the lingua franca.
 - I found myself speaking Urdu to the following people:
