@@ -5,6 +5,8 @@ date: 2024-03-21 08:46:00 -0600
 categories: python
 ---
 
+For part two of this series, click [here]({% post_url 2024-03-23-building-our-own-async-event-loop-in-python %})
+
 If you're reading this article, I'm assuming you have some background in Python, and I'm assuming that you've been a user of async libraries in Python. If you've ever written `async def` or `await ...` then you should have enough background to understand what's going on in this article. 
 
 ### Motivation

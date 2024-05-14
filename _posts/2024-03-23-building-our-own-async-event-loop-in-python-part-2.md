@@ -6,7 +6,7 @@ categories: python
 ---
 
 
-In the previous post we wrote our own naive async sleep function, and then did a bit of a deep dive into how Python's `asyncio` module handles sleeping/timeouts. We found that `asyncio` makes clever use of `select`-like system calls to handle timing out. Writing code that can asynchronously sleep is pretty cool, but it isn't particularly useful. 
+In the previous [post]({% post_url 2024-03-22-building-our-own-async-event-loop-in-python %}) we wrote our own naive async sleep function, and then did a bit of a deep dive into how Python's `asyncio` module handles sleeping/timeouts. We found that `asyncio` makes clever use of `select`-like system calls to handle timing out. Writing code that can asynchronously sleep is pretty cool, but it isn't particularly useful. 
 
 Async programming becomes useful when we start to talk about networking[^not-io]. Async programming allows us to get better use of our CPU's clock cycles when interacting with other computers over a network when compared to other thread-based techniques. Moreover, it can reduce a lot of the cognitive complexity associated with thread-based systems because our code looks like normal sequential code albeit peppered with a bunch of `async` and `await` statements.  
 
