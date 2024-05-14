@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Building our own async event loop in Python Part 2"
+title:  "Building our own Async Event Loop in Python: Part 2"
 date: 2024-03-23 08:49:00 -0600
 categories: python
 ---
