@@ -13,6 +13,7 @@ gem "jekyll-import"
 # This is the default theme for new Jekyll sites. You may change this to anything you like.
 gem "minima"
 gem "webrick"
+gem "rexml", ">= 3.3.6"
 
 # gem "kramdown", ">= 2.3.0"
 # If you want to use GitHub Pages, remove the "gem "jekyll"" above and
