@@ -5,11 +5,11 @@ date: 2024-11-20 18:41:00 -0600
 categories: python,rust
 ---
 
-In my [previous post]({% link _posts/2024-11-18-planet-tracker-rust.md %}) I alluded to using Rust's FFI to bring in an existing C library (in this case, the [`astronomy`](https://github.com/cosinekitty/astronomy) library) to do my ephemerides calculations for me, instead of using `PyO3` to invoke `ephem`. It turns out that this is very much possible and relatively simple. As part of this experiment, I wanted to benchmark the C bindings to the `PyO3` + `ephem` approach to see how much overhead `PyO3` introduces. 
+In my [previous post]({% link _posts/2024-11-18-planet-tracker-rust.md %}) I alluded to using Rust's FFI to bring in an existing C library (in this case, the [`astronomy`](https://github.com/cosinekitty/astronomy) library) to do my ephemerides calculations for me, instead of using `PyO3` to invoke `ephem`. It turns out that this is very much possible and relatively simple. For the purposes of this experiment, I've added the bindings to `planet-tracker`'s source code itself, instead of packaging things up as a separate library. If I intended to distribute the Rust implementation of `astronomy` as a separate crate, I would most definitely package it up in a library. Perhaps I'll do that at some point in the future! As part of this experiment, I wanted to benchmark the C bindings to the `PyO3` + `ephem` approach to see how much overhead `PyO3` introduces. 
 
 ### Bindings for `astronomy` 
 
-At first I thought I would write the bindings for the `astronomy` library by hand, but then I discovered that Rust has a tool purpose built for translating C headers into Rust interfaces: `bindgen`. Using `bindgen` meant that I didn't have to do the tedious task of grabbing struct and function definitions from the `astronomy.h` header file and place them in my own `lib.rs`. Moreover, it means that if I were to change a function signature in C-land, I don't have to remember to adjust things in my Rust library as well -- anytime the C header file changes, `bindgen` will re-create my Rust bindings. `bindgen` does this by making use of a `build.rs` file, which allows us to run code _before_ we compile any Rust code; anytime we run `cargo build`, `bindgen` creates a `bindings.rs` file that ends up (by default) somewhere in our `target` directory. Let's take a look at how I set up Rust bindings for the `astronomy` library. 
+At first I thought I would write the bindings for the `astronomy` library by hand, but then I discovered that Rust has a tool purpose built for translating C headers into Rust interfaces: `bindgen`. Using `bindgen` meant that I didn't have to do the tedious task of grabbing struct and function definitions from the `astronomy.h` header file and translating them to Rust. Moreover, it means that if I were to change a function signature in C-land, I don't have to remember to adjust things in my Rust library as well -- anytime the C header file changes, `bindgen` will re-create my Rust bindings. `bindgen` does this by making use of a `build.rs` file, which allows us to run code _before_ we compile any Rust code; anytime we run `cargo build`, `bindgen` creates a `bindings.rs` file that ends up (by default) somewhere in our `target` directory. Let's take a look at how I set up Rust bindings for the `astronomy` library. 
 
 #### Using `cc` to build a static library 
 
@@ -80,16 +80,11 @@ This file is pretty easy to understand. First, we tell `bindgen` where to find t
 Something I got really hung up on is the `OUT_DIR` environment variable -- I definitely wasn't setting this when calling `cargo build`, so I was confused how this code actually ran, given that we're calling `unwrap()` on the result of the call to `env::var`. It turns out that this gets set for us when running `cargo`. See [here](https://doc.rust-lang.org/cargo/reference/environment-variables.html) for more details. Moreover, `OUT_DIR` is just some directory in the `target` directory (the place where `cargo` dumps all build artifacts after running `cargo build`). The _exact_ location might vary for you, but we can take a quick peak at it to see what's inside. 
 
 ```
-dean@charon:/path/to/astronomy-rs -> make 
-clang -O3 -Wall -Werror -c -o target/astronomy.o -I./include src/astronomy.c -fPIC
-clang -shared -o lib/libastronomyc.so target/astronomy.o
-dean@charon:/path/to/astronomy-rs -> ls lib
-libastronomyc.so
-dean@charon:/path/to/astronomy-rs -> cargo build
+dean@charon:/path/to/planet-tracker -> cargo build
 ...
-dean@charon:/path/to/astronomy-rs -> find ./target -name binding.rs
+dean@charon:/path/to/planet-tracker -> find ./target -name binding.rs
 ./target/debug/build/astronomy-83270233d9c09cf5/out/bindings.rs
-dean@charon:/path/to/astronomy-rs -> head -n10 ./target/debug/build/astronomy-83270233d9c09cf5/out/bindings.rs
+dean@charon:/path/to/planet-tracker -> head -n10 ./target/debug/build/astronomy-83270233d9c09cf5/out/bindings.rs
 /* automatically generated by rust-bindgen 0.70.1 */
 
 pub const C_AUDAY: f64 = 173.1446326846693;
@@ -106,10 +101,13 @@ Cool! That looks pretty similar to what's happening in `astronomy.h`!
 
 #### Writing safe wrappers around unsafe C bindings
 
-Now that we've got our bindings set up, let's write a simple library that computes the quantities that we're interested in for `planet-tracker`, namely planet ephemerides, rising and setting times, and the apparent magnitude (brightness) of those planets. From here on out, I'll be working in the `src/lib.rs` file. First, let's create a `Planet` enum for all of our non-Earth planets of interest: 
+Now that we've got our bindings set up, let's write a simple module that computes the quantities that we're interested in for `planet-tracker`, namely planet ephemerides, rising and setting times, and the apparent magnitude (brightness) of those planets. From here on out, I'll be working in a `src/astronomy.rs` file. First, let's create a `Planet` enum for all of our non-Earth planets of interest: 
 
 ```rust
-// lib.rs
+// astronomy.rs
+use serde::{Serialize, Deserialize};
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum Planet {
     Mercury,
     Venus,
@@ -120,6 +118,8 @@ pub enum Planet {
     Neptune,
 }
 ```
+
+I've added the `Serialize` and `Deserialize` implementations because this will take the place of the `Planet` enum we added to `planet-tracker` in the previous post. 
 
 Now, let's write a function that will calculate ephemerides. 
 
@@ -352,6 +352,168 @@ This is a bit ugly, I'll admit, but basically we just construct a new `DateTime<
 
 I'm not quite sure how I feel about this! This doesn't feel particularly Rust-y; I would expect there to be some sort of `Result` involved as a `f64` exceeding the bounds of what a `u32` can handle smells like an error to me.
 
-#### Putting everything together
+### Putting everything together
 
-Now we're ready to go back to planet-tracker and rip out all the `PyO3`/`ephem` stuff that we implemented in the previous post.
+Now we're ready to go back to our `axum` server and tie everything together. Remember our endpoint handler `get_astron_object_data` from the previous post? Let's implement that using our `astronomy` bindings instead of `PyO3`/`ephem`: 
+
+```rust
+
+mod astronomy; 
+use astronomy::{EarthCoordinates, Planet};
+
+fn get_planet_ephemerides(
+    params: &GetAstronObjectParams,
+) -> Result<GetAstronObjectResponse, AppError> {
+    let coords = EarthCoordinates::new(params.lat, params.lon);
+    let az_el = params.name.get_ephemerides(&params.when, &coords)?;
+    let setting_time = params.name.get_setting_time(&params.when, &coords)?;
+    let rising_time = params.name.get_rising_time(&params.when, &coords)?;
+    let apparent_magnitude = params.name.get_apparent_magnitude(&params.when)?;
+
+    Ok(GetAstronObjectResponse {
+        name: params.name.clone(),
+        magnitude: apparent_magnitude,
+        size: 0.0,
+        az: az_el.az,
+        el: az_el.el,
+        ra: 0.0,
+        dec: 0.0,
+        setting_time,
+        rising_time,
+        when: params.when.clone(),
+    })
+}
+
+async fn get_astron_object_data(
+    Query(params): Query<GetAstronObjectParams>,
+) -> Result<Json<GetAstronObjectResponse>, AppError> {
+    let resp = get_planet_ephemerides(&params)?;
+    Ok(Json(resp))
+}
+
+#[tokio::main(flavor = "current_thread")]
+async fn main() {
+    let app = Router::new().route("/get_astron_object_data", get(get_astron_object_data));
+    let addr = "0.0.0.0:8081";
+    println!("Binding to {}", addr);
+    let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
+    axum::serve(listener, app).await.unwrap();
+}
+
+```
+
+Easy! You'll notice that we're doing a few repeated calculations when we make subsequent calls to `get_ephemerides`,  `get_setting_time` and `get_rising_time`; we create an new observer object and convert our date time objects with each of these calls. This introduces some overhead; at some point it might make sense to refactor things to introduce a new method that computes all the quantities we're interested in, or to add an intermediate computation that prevents us from having to make those conversions more than once. For now, we're going to leave things as they are. With this in place, we can start up our server in release mode: 
+
+
+```
+dean@charon:/path/to/planet-tracker -> cargo run --release 
+    Finished `release` profile [optimized] target(s) in 2.79s
+     Running `target/release/server`
+Binding to 0.0.0.0:8081
+```
+
+### Benchmarking
+
+So how does this compare to the `PyO3`/`ephem` implementation from the previous post? Let's write a quick benchmark to find out. 
+
+
+```rust
+use std::time::Instant;
+
+use astronomy::Planet;
+use chrono::Utc;
+use models::GetAstronObjectParams;
+use pyo3::Python;
+
+mod astronomy;
+mod ephemerides;
+mod ephemerides_pyo3;
+mod models;
+
+fn main() {
+    use Planet::*;
+    let planets = vec![Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune];
+    let params: Vec<GetAstronObjectParams> = planets
+        .into_iter()
+        .map(|p| GetAstronObjectParams {
+            name: p,
+            lon: 13.41,
+            lat: 52.49,
+            elevation: 0.0,
+            when: Utc::now(),
+        })
+        .collect();
+    let n = 1000;
+    let d0 = Instant::now();
+    for _ in 0..n {
+        for param in &params {
+            ephemerides::get_planet_ephemerides(param).unwrap();
+        }
+    }
+    let delta0 = Instant::now() - d0;
+
+    println!(
+        "(astronomy bindings): Took {:?} to do {} iterations, or {:?} per loop",
+        delta0,
+        n,
+        delta0 / n
+    );
+
+    ephemerides_pyo3::init().unwrap();
+    let d1 = Instant::now();
+    Python::with_gil(|py| {
+        for _ in 0..n {
+            for param in &params {
+                ephemerides_pyo3::get_planet_ephemerides(py, param).unwrap();
+            }
+        }
+    });
+
+    let delta1 = Instant::now() - d1;
+
+    println!(
+        "(PyO3/ephem): Took {:?} to do {} iterations, or {:?} per loop",
+        delta1,
+        n,
+        delta1 / n
+    );
+
+    if delta1 > delta0 {
+        println!(
+            "astronomy bindings {:?} times faster than PyO3/ephem",
+            delta1.as_secs_f64() / delta0.as_secs_f64()
+        );
+    } else {
+        println!(
+            "PyO3/ephem {:?} times faster than astronomy bindings",
+            delta0.as_secs_f64() / delta1.as_secs_f64()
+        );
+    }
+}
+
+```
+
+Nothing too crazy going on here; we make a vector of `GetAstronObjectParams` objects and then compute the ephemerides for each planet 1000 times. Here, I've done a little bit of refactoring; I put the `get_planet_ephemerides` functions in their own modules so I could use them in the benchmark. Here's the results on my local machine: 
+
+```
+(astronomy bindings): Took 370.599625ms to do 1000 iterations, or 370.599µs per loop
+(PyO3/ephem): Took 469.845834ms to do 1000 iterations, or 469.845µs per loop
+astronomy bindings 1.2677990000664465 times faster than PyO3/ephem
+```
+
+I'm not sure what to make of these results. I expected that PyO3 would impose a greater overhead; I fully expected the `astronomy` wrapper to be two to five times faster. A few thoughts:
+
+- I'd be really curious to understand the overhead that using `Python::with_gil` imposes. 
+- Given that `ephem` is itself a thin wrapper over a C library, I guess I shouldn't be _too_ surprised at these results.
+- To get a better understanding of what's going on here, I think we'd have to benchmark `ephem`'s underlying C library, [libastro](https://github.com/XEphem/XEphem/tree/main/libastro), against the `astronomy` C library. 
+- It would be cool to write some bindings for `libastro`, but this would be tricky given that this isn't super well documented -- I'd likely have to dig through `ephem`'s source code to figure out how to use it. Perhaps a topic for a future post? 
+
+### Next Steps 
+
+When I was originally putting `planet-tracker` together, I wanted to do it as a GitHub/Gitlab pages site, like my [homepage](dean-shaff.github.io). These sites are cool because you let GitHub/Gitlab take care of the hosting and DNS -- all you have to do is bring your own JS/CSS/HTML and GitHub serves it up for you. Anytime you `git push`, your changes are very quickly reflected on the live site. 
+
+Unfortunately, I couldn't find any JavaScript libraries for computing ephemerides, but I had a lot of experience with `ephem` given the work that I was doing at the time. All this meant that I couldn't use GitHub/Gitlab pages, but I could write a simple Python API for computing ephemerides and host it using a service like Heroku. This is quite a bit more complex than using GitHub pages, but it has been a cool experience to play around with inexpensive hosting/deployment solutions like Heroku, dokku and Hetzner. 
+
+I think I now have the opportunity to realize my initial dream for `planet-tracker`! Rust can compile down to webassembly, which means I could run my ephemerides calculation in the browser, instead of having to send a request to a server. In the next post in this series, I'll explore exactly that. 
+
+
