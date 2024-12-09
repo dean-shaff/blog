@@ -17,7 +17,7 @@ You can imagine how this democracy app would work. Anyone would be able to propo
 
 
 [^ideas]: None of the ideas I'm talking about are original. I'm mostly rehashing the main arguments from [In Defense of Anarchism](https://en.wikipedia.org/wiki/In_Defense_of_Anarchism), a fascinating little book that invites you to ask questions about some of the fundamental assumptions we make about government.  
-[^punishment] I think it's important to ask what happens if someone chooses to act in a way that violates the rules that everyone has agreed on. Do we punish people? What is the aim of punishment? What is justice? How do we compel people to behave according to the rules we agree upon? 
+[^punishment]: I think it's important to ask what happens if someone chooses to act in a way that violates the rules that everyone has agreed on. Do we punish people? What is the aim of punishment? What is justice? How do we compel people to behave according to the rules we agree upon? 
 [^propositions]: A lot of state and local governments in the USA have lots of propositions on the ballot. These are an interesting case where the average person actually gets to decide which laws are enacted! 
 [^security]: Some of your fingers might already be ablaze, ready to send me a red-hot E-mail talking about how security infrastructure is not developed enough to handle voting via an app. I agree, and I think this is a major obstacle that would need to be overcome in order to properly implement E-voting. 
 [^oxymoron]: I'm now at the point where I see the "representative democracy" as a sort of oxymoron, like "jumbo shrimp" or "democratic dictatorship". 
