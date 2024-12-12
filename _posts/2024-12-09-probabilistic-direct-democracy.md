@@ -5,6 +5,8 @@ date: 2024-12-08 17:55:19 -0600
 categories: personal, thoughts
 ---
 
+## DRAFT
+
 I've been thinking about how we go about government lately. In particular, I've been thinking democracy, and _representative_ democracy[^ideas]. For those of us in the Anglosphere, we often conflate the two, using the word "democracy" when what we're really talking about are representative democracies. I think there are definitely democratic _moments_ in representative democracies; this is the whole point of general elections where (depending on the system you live in) you vote for members of your legislative and/or executive body. After those democratic moments we end up handing over our vote to the people we elected; they get to make decisions on our behalf. I guess the people comprising the legislative body of our governments practice democracy if we were to pretend that society consisted entirely of the senators/representatives/MPs in the legislative body. 
 
 So, what is democracy? In short, I think it's a system in which everyone gets a say in making the rules that we all agree to live by. I'm being sort of vague here; I'm not talking about voting, nor am I talking about making laws. I'm also making some assumptions about how I think people should behave when living in a democracy. I'm assuming that if everyone makes a decision about how people should act, then most people living under this system will voluntarily choose to abide by that rule[^punishment]. If we put things in more concrete terms, a democracy is a system of government in which _every_ person votes on _every_ bill that gets proposed. 
