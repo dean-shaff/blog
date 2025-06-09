@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Spirituality"
-date: 2025-05-29 09:47:19 -0600
+date: 2025-06-08 09:47:19 -0600
 categories: personal
 ---
 
